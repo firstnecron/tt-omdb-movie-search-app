@@ -34,7 +34,7 @@ var app = (function ($) {
             html += '<i class="material-icons poster-placeholder">crop_original</i>';
         }
 
-        html += '</div>'
+        html += '</div>';
         html += '<span class="movie-title">' + movie.Title + '</span>';
         html += '<span class="movie-year">' + movie.Year + '</span></a></li>';
 
@@ -57,7 +57,7 @@ var app = (function ($) {
         // Title
         bodyHtml += '<h3 class="description-movie-title">' + movie.Title + ' (' + movie.Year + ')</h3>';
         // Rating
-        bodyHtml += '<p class="rating">IMDb Rating: ' + movie.imdbRating + '</p>'
+        bodyHtml += '<p class="rating">IMDb Rating: ' + movie.imdbRating + '</p>';
         // Plot
         bodyHtml += '<h5 class="plot-header">Plot Synopsis:</h5>';
         bodyHtml += '<p class="plot">' + movie.Plot + '</p>';
@@ -107,7 +107,7 @@ var app = (function ($) {
         };
 
         $.getJSON(url, data, processSearchResponse);
-    }
+    };
 
     var searchIMDb = function (imdbID) {
         if (!imdbID || imdbID === '') {
@@ -157,7 +157,7 @@ var app = (function ($) {
         event.preventDefault();
 
         searchIMDb($(this).data('imdb'));
-    })
+    });
 
     return exports;
 }($));
