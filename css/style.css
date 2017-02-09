@@ -150,6 +150,37 @@ button {
   margin: auto;
 }
 
+/* MOVIE DESCRIPTION COMPONENTS -------- */
+#movie-description .modal-body {
+  overflow: auto;
+}
+
+.description-poster {
+  float: left;
+  width: 25%;
+}
+
+.description-poster.poster-placeholder {
+  position: inherit;
+}
+
+.description-wrapper {
+  margin-left: 25%;
+  padding-left: 20px;
+}
+
+.rating {
+  border-bottom: 2px solid #c1c1c1;
+}
+
+.plot-header {
+  margin-top: 10px;
+}
+
+#imdb-button {
+  margin-top: 30px;
+}
+
 /* ================================= 
   Layout Styles
 ==================================== */

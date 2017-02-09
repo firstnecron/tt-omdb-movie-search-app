@@ -8,15 +8,25 @@ var app = (function ($) {
     var $moviesList = $('#movies');
     var $desc = $('.desc');
     var $noMovies = $('.no-movies').detach();
-    var $movieDescription = $('<div id="movie-description" class=""></div>');
+    var $movieModal = $('<div class="modal fade" tabindex="-1" role="document" id="movie-description">' +
+        '<div class="modal-dialog modal-lg" role="document">' +
+            '<div class="modal-content">' +
+                '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                    '<h4 class="modal-title"></h4>' +
+                '</div>' +
+                '<div class="modal-body"></div>' +
+            '</div>' +
+        '</div>' +
+        '</div>');
 
     //UI changes
     $noMovies.detach();
-    $('.main-content').append($movieDescription.hide());
+    $('.main-content').append($movieModal.hide());
 
     var createMovieListItem = function (movie) {
         var html = '<li>' +
-            '<a href="#"><div class="poster-wrap">';
+            '<a href="#" data-imdb="' + movie.imdbID + '"><div class="poster-wrap">';
 
         if (movie.Poster && movie.Poster !== 'N/A' && movie.Poster !== '') {
             html += '<img class="movie-poster" src="' + movie.Poster + '">';
@@ -31,8 +41,33 @@ var app = (function ($) {
         return html;
     };
 
-    var showMovieDescription = function (movie) {
+    var displayMovieDescription = function (movie) {
 
+        // Title
+        $movieModal.find('.modal-title').text(movie.Title);
+        // Body
+        var bodyHtml = '';
+        // Poster
+        if (movie.Poster && movie.Poster !== '') {
+            bodyHtml += '<img class="description-poster" src="' + movie.Poster + '">';
+        } else {
+            bodyHtml += '<i class="description-poster material-icons poster-placeholder">crop_original</i>';
+        }
+        bodyHtml += '<div class="description-wrapper">';
+        // Title
+        bodyHtml += '<h3 class="description-movie-title">' + movie.Title + ' (' + movie.Year + ')</h3>';
+        // Rating
+        bodyHtml += '<p class="rating">IMDb Rating: ' + movie.imdbRating + '</p>'
+        // Plot
+        bodyHtml += '<h5 class="plot-header">Plot Synopsis:</h5>';
+        bodyHtml += '<p class="plot">' + movie.Plot + '</p>';
+        // IMDb Link
+        bodyHtml += '<a id="imdb-button" href="http://www.imdb.com/title/' + movie.imdbID + '/" class="btn btn-primary btn-lg">View on IMDb</a>';
+        bodyHtml += '</div>';
+
+        $movieModal.find('.modal-body').html(bodyHtml);
+
+        $movieModal.modal();
     };
 
     var searchMovie = function (title, year) {
@@ -55,10 +90,6 @@ var app = (function ($) {
                 for (var i = 0; i < movies.length; i++) {
                     var movie = movies[i];
                     var li = createMovieListItem(movie);
-                    $(li).find('a').on('click', function (event) {
-                        event.preventDefault();
-                        showMovieDescription(movie);
-                    })
                     $moviesList.append(li);
                 }
             } else {
@@ -77,6 +108,29 @@ var app = (function ($) {
 
         $.getJSON(url, data, processSearchResponse);
     }
+
+    var searchIMDb = function (imdbID) {
+        if (!imdbID || imdbID === '') {
+            return;
+        }
+
+        var url = 'http://www.omdbapi.com/';
+        //var url = './examples/sample_imdb_result.json';
+        var data = {
+            i: imdbID,
+            plot: 'full'
+        };
+
+        var processImdbResponse = function (response) {
+            if (response.Response === 'True') {
+                displayMovieDescription(response);
+            } else {
+                return;
+            }
+        };
+
+        $.getJSON(url, data, processImdbResponse);
+    };
 
     $('.search-form').on('submit', function (event) {
         event.preventDefault();
@@ -98,6 +152,12 @@ var app = (function ($) {
            searchMovie(title, year);
        }
     });
+
+    $moviesList.on('click', 'li a', function (event) {
+        event.preventDefault();
+
+        searchIMDb($(this).data('imdb'));
+    })
 
     return exports;
 }($));
