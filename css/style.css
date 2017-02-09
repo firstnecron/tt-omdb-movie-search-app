@@ -209,7 +209,8 @@ button {
     width: 50%;
   }
 
-  .movie-list .desc {
+  .movie-list .desc,
+  .movie-list .no-movies {
     width: 100%;
     float: none;
   }
